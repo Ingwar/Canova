@@ -34,7 +34,7 @@ public class ImageNameRecordReader extends BaseImageRecordReader {
     }
 
     public ImageNameRecordReader(int width, int height, int channels, List<String> labels) {
-        super(width, height, channels, labels);
+        super(width, height, channels, false, labels);
     }
 
     public ImageNameRecordReader(int width, int height, int channels, boolean appendLabel, List<String> labels) {
@@ -50,19 +50,19 @@ public class ImageNameRecordReader extends BaseImageRecordReader {
     }
 
     public ImageNameRecordReader(int width, int height, List<String> labels) {
-        super(width, height, labels);
+        super(width, height, 1, false, labels);
     }
 
     public ImageNameRecordReader(int width, int height, boolean appendLabel, List<String> labels) {
-        super(width, height, appendLabel, labels);
+        super(width, height, 1, appendLabel, labels);
     }
 
     public ImageNameRecordReader(int width, int height) {
-        super(width, height);
+        super(width, height, 1);
     }
 
     public ImageNameRecordReader(int width, int height, boolean appendLabel) {
-        super(width, height, appendLabel);
+        this(width, height, 1, appendLabel);
     }
 
     @Override

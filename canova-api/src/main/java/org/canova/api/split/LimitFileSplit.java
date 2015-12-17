@@ -2,6 +2,8 @@ package org.canova.api.split;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
@@ -16,14 +18,16 @@ import java.util.*;
  * Created by nyghtowl on 11/9/15.
  */
 public class LimitFileSplit extends FileSplit {
-    protected int numExamples;
+    protected static Logger log = LoggerFactory.getLogger(LimitFileSplit.class);
+
+    protected int totalNumExamples;
     protected int numCategories;
     protected String pattern; // Pattern to split and segment file name, pass in regex
     protected int patternPosition = 0;
 
     public LimitFileSplit(File rootDir, String[] allowFormat, boolean recursive, int numExamples, int numCategories, String pattern, int patternPosition, Random random) {
         super(rootDir, allowFormat, recursive, random, false);
-        this.numExamples = numExamples;
+        this.totalNumExamples = numExamples;
         this.numCategories = numCategories;
         this.pattern = pattern;
         this.patternPosition = patternPosition;
@@ -82,7 +86,7 @@ public class LimitFileSplit extends FileSplit {
         Iterator iter = FileUtils.iterateFiles(rootDir, allowFormat, recursive);
         subFiles = new ArrayList<>();
 
-        int numExamplesPerCategory = numExamples / numCategories;
+        int numExamplesPerCategory = (totalNumExamples >= numCategories) ? (totalNumExamples / numCategories) + (totalNumExamples % numCategories): 1;
 
         File file;
         Map<String, Integer> fileCount = new HashMap<>();
@@ -90,10 +94,10 @@ public class LimitFileSplit extends FileSplit {
         int totalCount = 0;
 
         while (iter.hasNext()) {
-            if(totalCount >= numExamples) break;
+            if(totalCount >= totalNumExamples) break;
             file = (File) iter.next();
             if (pattern != null) {
-                // Define filename to help track of categories
+                // Define filename to help track categories
                 currName = FilenameUtils.getBaseName(file.getName()).split(pattern)[patternPosition];
             }
 
@@ -110,6 +114,7 @@ public class LimitFileSplit extends FileSplit {
                     totalCount++;
                 }
             }
+            if (numExamplesPerCategory == 0) log.info("{} number of categories were loaded", fileCount.keySet().size() );
         }
 
         locations = new URI[subFiles.size()];

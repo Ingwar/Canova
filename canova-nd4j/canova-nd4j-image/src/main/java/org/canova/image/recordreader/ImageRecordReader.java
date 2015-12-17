@@ -21,6 +21,8 @@
 package org.canova.image.recordreader;
 
 
+import org.canova.image.loader.ImageLoader;
+
 import java.io.File;
 import java.util.*;
 
@@ -40,16 +42,24 @@ public class ImageRecordReader extends BaseImageRecordReader {
         super();
     }
 
-    public ImageRecordReader(int width, int height, int channels, List<String> labels) {
-        super(width, height, channels, labels);
-    }
-
-    public ImageRecordReader(int width, int height, int channels, boolean appendLabel, List<String> labels) {
-        super(width, height, channels, appendLabel, labels);
+    public ImageRecordReader(int width, int height) {
+        super(width, height, 1);
     }
 
     public ImageRecordReader(int width, int height, int channels) {
         super(width, height, channels);
+    }
+
+    public ImageRecordReader(int width, int height, int channels, List<String> labels) {
+        super(width, height, channels, false, labels);
+    }
+
+    public ImageRecordReader(int width, int height, boolean appendLabel) {
+        this(width, height, 1, appendLabel);
+    }
+
+    public ImageRecordReader(int width, int height, int channels, boolean appendLabel, List<String> labels) {
+        super(width, height, channels, appendLabel, labels);
     }
 
     public ImageRecordReader(int width, int height, int channels, boolean appendLabel) {
@@ -57,21 +67,29 @@ public class ImageRecordReader extends BaseImageRecordReader {
     }
 
     public ImageRecordReader(int width, int height, List<String> labels) {
-        super(width, height, labels);
+        super(width, height, 1, false, labels);
     }
 
     public ImageRecordReader(int width, int height, boolean appendLabel, List<String> labels) {
-        super(width, height, appendLabel, labels);
+        super(width, height, 1, appendLabel, labels);
     }
 
-    public ImageRecordReader(int width, int height) {
-        super(width, height);
+    public ImageRecordReader(int width, int height, int channels, String labelPath) {
+        super(width, height, channels, false, labelPath, null, 0); }
+
+    public ImageRecordReader(int width, int height, int channels, boolean appendLabel, String labelPath) {
+        super(width, height, channels, appendLabel, labelPath,  null, 0);     }
+
+    public ImageRecordReader(int width, int height, int channels, boolean appendLabel, String labelPath, String pattern) {
+        super(width, height, channels, appendLabel, labelPath, pattern, 0);
+    }
+    public ImageRecordReader(int width, int height, int channels, boolean appendLabel, String labelPath, String pattern, int patternPosition) {
+        super(width, height, channels, appendLabel, labelPath, pattern, patternPosition);
     }
 
-    public ImageRecordReader(int width, int height, boolean appendLabel) {
-        super(width, height, appendLabel);
+    public ImageRecordReader(int width, int height, int channels, boolean appendLabel, String labelPath, String pattern, int patternPosition, String fileNameMapPath) {
+        super(width, height, channels, appendLabel, labelPath, null, 0, fileNameMapPath);
     }
-
 
     @Override
     public String getLabel(String path) {
